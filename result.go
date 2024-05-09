@@ -3,6 +3,7 @@ package sdk
 import (
 	"context"
 	"encoding/json"
+
 	grpc "github.com/crawlab-team/crawlab-grpc"
 	"github.com/crawlab-team/crawlab-sdk/entity"
 	"github.com/crawlab-team/crawlab-sdk/interfaces"
@@ -105,4 +106,20 @@ func SaveItem(items ...entity.Result) {
 
 func SaveItems(items []entity.Result) {
 	GetResultService().SaveItems(items)
+}
+
+// WaitStreamCloseAndRecv Wait for the message to be sent and the server to finish processing the sent data, then close the connection
+// Note: It should be called before the program ends, waiting for the server to process all the data sent. 
+// For example:
+// func main() {
+// 	defer sdk.WaitStreamCloseAndRecv()
+// 	// some other handle...
+// }
+func WaitStreamCloseAndRecv() {
+	_, err := RS.sub.CloseAndRecv()
+	if err != nil {
+		trace.PrintError(err)
+		return
+	}
+	RS = nil
 }
