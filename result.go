@@ -3,6 +3,7 @@ package sdk
 import (
 	"context"
 	"encoding/json"
+	"io"
 
 	grpc "github.com/crawlab-team/crawlab-grpc"
 	"github.com/crawlab-team/crawlab-sdk/entity"
@@ -117,7 +118,7 @@ func SaveItems(items []entity.Result) {
 // }
 func WaitStreamCloseAndRecv() {
 	_, err := RS.sub.CloseAndRecv()
-	if err != nil {
+	if err != nil && err != io.EOF {
 		trace.PrintError(err)
 		return
 	}
