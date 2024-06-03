@@ -117,6 +117,9 @@ func SaveItems(items []entity.Result) {
 // 	// some other handle...
 // }
 func WaitStreamCloseAndRecv() {
+	if RS == nil {
+		return
+	}
 	_, err := RS.sub.CloseAndRecv()
 	if err != nil && err != io.EOF {
 		trace.PrintError(err)
